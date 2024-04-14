@@ -5,7 +5,7 @@ import { formatLocalDate } from "utils/format";
 import { BASE_URL } from "utils/request";
 
 const DataTable = () => {
-    const [activePage, setActivePage] = useState(0);
+    const [activePage] = useState(0);
     const [page, setPage] = useState<PolicyPage>({
         first: true,
         last: true,
@@ -25,10 +25,6 @@ const DataTable = () => {
                 console.error('Erro ao buscar dados da API:', error);
             });
     }, [activePage])
-
-    const changePage = (index: number) => {
-        setActivePage(index);
-    }
 
     return (
         <>
