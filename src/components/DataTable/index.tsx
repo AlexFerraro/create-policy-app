@@ -79,7 +79,7 @@ const DataTable = () => {
                             <td>{item.cpf}</td>
                             <td>{item.situacao}</td>
                             <td>{formatCurrency(item.premioTotal.toString())}</td>
-                            <td>{formatLocalDate(item.dataCriacao, "dd/MM/yyyy HH:mm:ss")}</td>
+                            <td>{formatLocalDate(item.dataCriacao, "dd/MM/yyyy")}</td>
                         </tr>
                         ))
                         }
