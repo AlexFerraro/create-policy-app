@@ -47,6 +47,10 @@ const DataTable = () => {
         fetchData();
     }, [activePage]);
     
+    const formatCurrency = (value: string) => {
+        const currencyValue = parseFloat(value.replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
+        return currencyValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    };
 
     const changePage = (index: number) => {
         setActivePage(index);
@@ -59,7 +63,7 @@ const DataTable = () => {
                 <table className="table table-striped table-sm">
                     <thead>
                         <tr>
-                            <th>ID</th> {/* Adicionado campo de ID */}
+                            <th>ID</th>
                             <th>Descrição</th>
                             <th>CPF</th>
                             <th>Situação</th>
@@ -70,11 +74,11 @@ const DataTable = () => {
                     <tbody>
                         {page.data?.map(item =>
                         (<tr key={item.id}>
-                            <td>{item.id}</td> {/* Adicionado campo de ID */}
+                            <td>{item.id}</td>
                             <td>{item.descricao}</td>
                             <td>{item.cpf}</td>
                             <td>{item.situacao}</td>
-                            <td>{item.premioTotal}</td>
+                            <td>{formatCurrency(item.premioTotal.toString())}</td>
                             <td>{formatLocalDate(item.dataCriacao, "dd/MM/yyyy HH:mm:ss")}</td>
                         </tr>
                         ))

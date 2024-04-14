@@ -23,7 +23,7 @@ const CreatePolicyPage = () => {
         id: 0,
         descricao: "",
         cpf: "",
-        situacao: "",
+        situacao: "ATIVA",
         premioTotal: "",
         formaPagamento: "",
         dataPagamento: "", 
@@ -63,18 +63,21 @@ const CreatePolicyPage = () => {
                 return;
             }
 
-            const { descricao, situacao, premioTotal, formaPagamento, dataPagamento } = formData;
+            const { descricao, situacao, formaPagamento, dataPagamento } = formData;
             
+            // Remover a máscara e converter para número o valor premioTotal (R$)
+            const premioTotalNumber = parseFloat(formData.premioTotal.replace(/[^0-9,]*/g, '').replace(',', '.')).toFixed(2);
+
             const dataToSend = {
                 id: formData.id,
                 descricao,
                 cpf: cpfWithoutSpecialChars,
                 situacao,
-                premioTotal,
+                premioTotal: premioTotalNumber,
                 parcelas: [
                     {
                         id: formData.parcelas[0].id,
-                        premio: formData.premioTotal,
+                        premio: premioTotalNumber,
                         formaPagamento,
                         dataPagamento
                     }
@@ -111,6 +114,11 @@ const CreatePolicyPage = () => {
             .replace(/(-\d{2})\d+?$/, '$1');
     };
 
+    const formatCurrency = (value: string) => {
+        const currencyValue = parseFloat(value.replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
+        return currencyValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    };
+
     return (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <form onSubmit={handleSubmit} style={{ width: "400px", padding: "20px", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)", backgroundColor: "#f9f9f9", marginTop: "1px", marginBottom: "25px" }}>
@@ -121,16 +129,15 @@ const CreatePolicyPage = () => {
                     <input type="text" id="cpf" name="cpf" maxLength={14} value={formatCPF(formData.cpf)} onChange={handleChange} style={{ width: "100%", padding: "8px", borderRadius: "4px", border: `1px solid ${errorFields.includes("cpf") ? 'red' : '#ccc'}` }} />
                 </div>
                 <div style={{ marginBottom: "20px" }}>
-                    <label htmlFor="situacao" style={{ display: "block", marginBottom: "5px" }}>Situação:</label>
-                    <select id="situacao" name="situacao" value={formData.situacao} onChange={handleChange} style={{ width: "100%", padding: "8px", borderRadius: "4px", border: `1px solid ${errorFields.includes("situacao") ? 'red' : '#ccc'}` }}>
-                        <option value="">Selecione...</option>
-                        <option value="ATIVA">ATIVA</option>
-                        <option value="INATIVA">INATIVA</option>
-                    </select>
+                    <label htmlFor="premioTotal" style={{ display: "block", marginBottom: "5px" }}>Prêmio Total:</label>
+                    <input type="text" id="premioTotal" name="premioTotal" value={formatCurrency(formData.premioTotal)} onChange={handleChange} style={{ width: "100%", padding: "8px", borderRadius: "4px", border: `1px solid ${errorFields.includes("premioTotal") ? 'red' : '#ccc'}` }} />
                 </div>
                 <div style={{ marginBottom: "20px" }}>
-                    <label htmlFor="premioTotal" style={{ display: "block", marginBottom: "5px" }}>Prêmio Total:</label>
-                    <input type="text" id="premioTotal" name="premioTotal" value={formData.premioTotal} onChange={handleChange} style={{ width: "100%", padding: "8px", borderRadius: "4px", border: `1px solid ${errorFields.includes("premioTotal") ? 'red' : '#ccc'}` }} />
+                    <label htmlFor="situacao" style={{ display: "block", marginBottom: "5px" }}>Situação:</label>
+                    <select id="situacao" name="situacao" value={formData.situacao} onChange={handleChange} style={{ width: "100%", padding: "8px", borderRadius: "4px", border: `1px solid ${errorFields.includes("situacao") ? 'red' : '#ccc'}` }}>
+                        <option value="ATIVA">Ativa</option>
+                        <option value="INATIVA">Inativa</option>
+                    </select>
                 </div>
                 <div style={{ marginBottom: "20px" }}>
                     <label htmlFor="formaPagamento" style={{ display: "block", marginBottom: "5px" }}>Forma de Pagamento:</label>
