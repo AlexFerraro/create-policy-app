@@ -1,33 +1,60 @@
 import axios from "axios";
+import Pagination from "components/Pagination";
 import { useEffect, useState } from "react";
 import { PolicyPage } from "types/policy";
 import { formatLocalDate } from "utils/format";
 import { BASE_URL } from "utils/request";
 
 const DataTable = () => {
-    const [activePage] = useState(0);
+    const [activePage, setActivePage] = useState(0);
     const [page, setPage] = useState<PolicyPage>({
         first: true,
         last: true,
         number: 0,
         totalElements: 0,
-        totalPages: 0,
-        data: []
+        totalPages: 0
     });
 
     useEffect(() => {
-        axios.get(`${BASE_URL}/v1/api/apolice?skip=0&take=2147483647`)
-            .then(response => {
-                console.log('Dados da API:', response.data); // Adicionando o log dos dados da API
-                setPage(response.data);
-            })
-            .catch(error => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`${BASE_URL}/v1/api/apolice`, {
+                    params: {
+                        skip: activePage * 15, // Ajuste para corresponder ao parâmetro de página da nova API
+                        take: 15 // Ajuste para corresponder ao tamanho da página da nova API
+                    }
+                });
+                
+                const policies = response.data.data; // Lista de políticas retornadas pela API
+                const totalPolicies = response.data.data.length; // Número total de políticas
+    
+                const policyPage: PolicyPage = {
+                    data: policies,
+                    last: totalPolicies < 15, // Verifica se é a última página
+                    totalPages: totalPolicies,
+                    totalElements: totalPolicies,
+                    first: activePage === 0, // Verifica se é a primeira página
+                    number: activePage,
+                    empty: totalPolicies === 0 // Verifica se a lista de políticas está vazia
+                };
+    
+                setPage(policyPage);
+            } catch (error) {
                 console.error('Erro ao buscar dados da API:', error);
-            });
-    }, [activePage])
+            }
+        };
+    
+        fetchData();
+    }, [activePage]);
+    
+
+    const changePage = (index: number) => {
+        setActivePage(index);
+    }
 
     return (
         <>
+        <Pagination page={page} onPageChange={changePage} />
             <div className="table-responsive">
                 <table className="table table-striped table-sm">
                     <thead>
