@@ -48,7 +48,7 @@ const DataTable = () => {
     }, [activePage]);
     
     const formatCurrency = (value: string) => {
-        const currencyValue = parseFloat(value.replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
+        const currencyValue = parseFloat(value) || 0;
         return currencyValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     };
 
@@ -68,7 +68,7 @@ const DataTable = () => {
                             <th>CPF</th>
                             <th>Situação</th>
                             <th>Prêmio Total</th>
-                            <th>Data de Criação</th>
+                            <th>Data do Pagamento</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -79,7 +79,7 @@ const DataTable = () => {
                             <td>{item.cpf}</td>
                             <td>{item.situacao}</td>
                             <td>{formatCurrency(item.premioTotal.toString())}</td>
-                            <td>{formatLocalDate(item.dataCriacao, "dd/MM/yyyy")}</td>
+                            <td>{formatLocalDate(item.installments[0].dataPagamento, "dd/MM/yyyy")}</td>
                         </tr>
                         ))
                         }
