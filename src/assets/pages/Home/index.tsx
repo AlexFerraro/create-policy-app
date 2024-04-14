@@ -9,16 +9,18 @@ const DashBoard = () => {
         <>
             <NavBar />
             <div className="container">
-                <h1 className="text-primary py-3 text-center">Sistema de Controle de Apólice de Seguros</h1>
-                <div className="row justify-content-center">
-                    <div className="col-sm-6">
+                <h1 className="text-primary py-3 text-center"></h1>
+                <div className="row">
+                    <div className="col-lg-6">
                         <CreatePolicyPage />
                     </div>
+                    <div className="col-lg-6">
+                        <div className="py-3">
+                            <h2 className="text-primary text-center">Apólices Cadastradas</h2>
+                        </div>
+                        <DataTable />
+                    </div>
                 </div>
-                <div className="py-3">
-                    <h2 className="text-primary text-center">Todas as Apólices Cadastradas</h2>
-                </div>
-                <DataTable />
             </div>
             <Footer />
         </>
